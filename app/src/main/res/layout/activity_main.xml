@@ -38,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="0" />
 
             <SeekBar
                 android:id="@+id/redSeekbar"
@@ -69,7 +70,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="0" />
 
             <SeekBar
                 android:id="@+id/blueSeekbar"
@@ -100,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="0" />
 
             <SeekBar
                 android:id="@+id/greenseekBar"

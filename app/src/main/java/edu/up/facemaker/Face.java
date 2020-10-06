@@ -4,6 +4,8 @@
 package edu.up.facemaker;
 
 import java.util.Random;
+
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.Log;
 
@@ -26,4 +28,9 @@ public class Face {
         hairStyle = rnd.nextInt(3); //set random hairStyle to value between 0-3 for corresponding hairstyles
         Log.v("Debug1", "print " + skinColor + " " + eyeColor + " " + hairColor + " " + hairStyle); //check if randomized
     }
+     public void onDraw(Canvas canvas) {
+        //drawFace(canvas);
+        //drawHair(canvas);
+        //drawEyes(canvas);
+     }
 }
