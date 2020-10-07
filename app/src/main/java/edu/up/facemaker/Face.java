@@ -118,7 +118,8 @@ public class Face extends SurfaceView {
                 canvas.drawLine(650, 415, 975, 360, hairPaint);
                 canvas.drawLine(650, 425, 975, 370, hairPaint);
                 break;
-            case 2: //bald - no hair :(
+            case 2: //bald - shiny bald spot head
+                canvas.drawOval(faceMidH - moWidth/2, faceMidV - faceHeight/2 + mouthHeight/3, faceMidH + moWidth/2, faceMidV - moWidth, hairPaint);
                 break;
         }
      }
