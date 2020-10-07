@@ -10,10 +10,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.RadioGroup;
 
-import androidx.constraintlayout.solver.state.helpers.ChainReference;
 
 public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener, Button.OnClickListener, Spinner.OnItemSelectedListener {
 
+    //set instance variables
     private EditText rVal;
     private EditText bVal;
     private EditText gVal;
@@ -26,7 +26,8 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
     private FaceModel faceModel;
     private Face faceView;
 
-    public RGBListeners(Face faceView, EditText rVal, EditText bVal, EditText gVal, SeekBar rSeekbar, SeekBar bSeekBar, SeekBar gSeekbar, RadioGroup radioGroup, Spinner hairSpinner) { //constructor to set values of numberview and seekbar
+    public RGBListeners(Face faceView, EditText rVal, EditText bVal, EditText gVal, SeekBar rSeekbar,
+                            SeekBar bSeekBar, SeekBar gSeekbar, RadioGroup radioGroup, Spinner hairSpinner) { //constructor to set values of all instance variables
         this.faceView = faceView;
         this.faceModel = this.faceView.getFaceModel();
         this.rVal = rVal;
@@ -40,12 +41,12 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) { //when seekBar moves, update progress
         if(fromUser) {
             int i = radioGroup.getCheckedRadioButtonId();
-            switch (seekBar.getId()) {
+            switch (seekBar.getId()) { //check which seekBar is being updated
                 case R.id.redSeekbar:
-                    switch(i) {
+                    switch(i) { //check which RadioButton is selected, update corresponding value with seekBar progress
                         case R.id.hair:
                             faceModel.hairColorR = progress;
                             break;
@@ -81,7 +82,7 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
                     }
                     break;
             }
-            updateViews(i);
+            updateViews(i); //after change, update the view
         }
     }
 
@@ -98,7 +99,7 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
         updateViews(i);
-    }
+    } // only need to update the view to show changed values of seekbars and numviews
 
     protected void updateViews(int i) {
         //Log.d("UPDATEVIEWS", "updateViews is called");
@@ -132,17 +133,15 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
         faceView.invalidate();
     }
     @Override
-    public void onClick(View view) {
-        faceView.randomize();
-
+    public void onClick(View view) { //only one button, so only one action
+        faceView.randomize(); //randomize all fields of the faceView
         updateViews(radioGroup.getCheckedRadioButtonId());
     }
 
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        faceModel.hairStyle = i;
-        faceView.invalidate();
+        faceModel.hairStyle = i; // update hairStyle value to change hairStyle on face
         updateViews(radioGroup.getCheckedRadioButtonId());
     }
 

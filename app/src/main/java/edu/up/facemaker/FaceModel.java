@@ -1,7 +1,7 @@
 package edu.up.facemaker;
 
 public class FaceModel {
-
+    //fields for drawing face
     public int skinColorR;
     public int skinColorB;
     public int skinColorG;

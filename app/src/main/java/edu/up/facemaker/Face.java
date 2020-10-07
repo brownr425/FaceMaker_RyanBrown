@@ -23,6 +23,7 @@ public class Face extends SurfaceView {
     Paint outerEyePaint = new Paint();
     Paint mouthPaint = new Paint();
 
+    //locations and values for drawing
     float faceMidH = 825.0f;
     float faceMidV = 725.0f;
     float faceWidth = 800.0f;
@@ -34,12 +35,11 @@ public class Face extends SurfaceView {
     float mouthWidth = 300.0f;
     float mouthHeight = 50.0f;
 
-    public Face(Context context, AttributeSet attrSet) {
+    public Face(Context context, AttributeSet attrSet) { //set up faceview
         super(context,attrSet);
 
-        faceModel = new FaceModel();
-
-        randomize();
+        faceModel = new FaceModel(); //create fields for face
+        randomize(); //randomize those fields
 
         //set up color palette
         setColors();
@@ -51,11 +51,11 @@ public class Face extends SurfaceView {
         mouthPaint.setColor(Color.BLACK);
         mouthPaint.setStyle(Paint.Style.FILL);
 
-        setWillNotDraw(false);
+        setWillNotDraw(false); //needs to be here to call onDraw
         this.setBackgroundColor(Color.LTGRAY);
     }
 
-    private void setColors() {
+    private void setColors() { //sets colors for drawing
         faceModel.skinColor = Color.argb(255,faceModel.skinColorR,faceModel.skinColorG,faceModel.skinColorB);
         faceModel.eyeColor = Color.argb(255,faceModel.eyeColorR,faceModel.eyeColorG,faceModel.eyeColorB);
         faceModel.hairColor = Color.argb(255,faceModel.hairColorR,faceModel.hairColorG,faceModel.hairColorB);
@@ -84,11 +84,13 @@ public class Face extends SurfaceView {
 
     }
      public void onDraw(Canvas canvas) {
-        setColors();
-        drawFace(canvas);
-        drawEyes(canvas);
-        drawHair(canvas);
-        canvas.drawRect(faceMidH - mouthWidth/2, faceMidV + faceHeight/3, faceMidH + mouthWidth/2, faceMidV + faceHeight/3 + mouthHeight, mouthPaint);
+        setColors(); //set colors again in case they changed
+        drawFace(canvas); //self explanatory
+        drawEyes(canvas); // ""
+        drawHair(canvas); // ""
+        //draw the mouth
+        canvas.drawRect(faceMidH - mouthWidth/2, faceMidV + faceHeight/3,
+                faceMidH + mouthWidth/2, faceMidV + faceHeight/3 + mouthHeight, mouthPaint);
      }
 
      private void drawFace(Canvas canvas) {
@@ -116,16 +118,16 @@ public class Face extends SurfaceView {
                 canvas.drawLine(650, 415, 975, 360, hairPaint);
                 canvas.drawLine(650, 425, 975, 370, hairPaint);
                 break;
-            case 2: //bald
+            case 2: //bald - no hair :(
                 break;
         }
      }
-     private void drawEyes(Canvas canvas) {
+     private void drawEyes(Canvas canvas) { //draws eyes based on face and radii
         canvas.drawCircle(faceMidH - eyeRad - smallEyeRad, faceMidV - eyeRad, eyeRad, outerEyePaint);
         canvas.drawCircle(faceMidH + eyeRad + smallEyeRad, faceMidV - eyeRad, eyeRad, outerEyePaint);
         canvas.drawCircle(faceMidH - eyeRad - smallEyeRad, faceMidV - eyeRad, smallEyeRad, innerEyePaint);
         canvas.drawCircle(faceMidH + eyeRad + smallEyeRad, faceMidV - eyeRad, smallEyeRad, innerEyePaint);
      }
 
-     public FaceModel getFaceModel() { return faceModel; }
+     public FaceModel getFaceModel() { return faceModel; } //able to share faceModel with other classes
 }
