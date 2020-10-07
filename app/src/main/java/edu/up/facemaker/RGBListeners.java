@@ -1,13 +1,18 @@
 package edu.up.facemaker;
 
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.RadioGroup;
 
-public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener, TextView.OnEditorActionListener {
+import androidx.constraintlayout.solver.state.helpers.ChainReference;
+
+public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener, Button.OnClickListener, Spinner.OnItemSelectedListener {
 
     private EditText rVal;
     private EditText bVal;
@@ -15,31 +20,68 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
     private SeekBar rSeekbar;
     private SeekBar bSeekbar;
     private SeekBar gSeekbar;
-    private RadioGroup changes;
+    private RadioGroup radioGroup;
+    private Spinner hairSpinner;
 
-    public RGBListeners(EditText rVal, EditText bVal, EditText gVal,
-                        SeekBar rSeekbar, SeekBar bSeekbar, SeekBar gSeekbar) { //constructor to set values of numberview and seekbar
+    private FaceModel faceModel;
+    private Face faceView;
+
+    public RGBListeners(Face faceView, EditText rVal, EditText bVal, EditText gVal, SeekBar rSeekbar, SeekBar bSeekBar, SeekBar gSeekbar, RadioGroup radioGroup, Spinner hairSpinner) { //constructor to set values of numberview and seekbar
+        this.faceView = faceView;
+        this.faceModel = this.faceView.getFaceModel();
         this.rVal = rVal;
         this.bVal = bVal;
         this.gVal = gVal;
         this.rSeekbar = rSeekbar;
-        this.bSeekbar = bSeekbar;
+        this.bSeekbar = bSeekBar;
         this.gSeekbar = gSeekbar;
+        this.radioGroup = radioGroup;
+        this.hairSpinner = hairSpinner;
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if(fromUser) {
+            int i = radioGroup.getCheckedRadioButtonId();
             switch (seekBar.getId()) {
                 case R.id.redSeekbar:
-                    rVal.setText("" + progress);
+                    switch(i) {
+                        case R.id.hair:
+                            faceModel.hairColorR = progress;
+                            break;
+                        case R.id.eyes:
+                            faceModel.eyeColorR = progress;
+                            break;
+                        case R.id.skin:
+                            faceModel.skinColorR = progress;
+                    }
                     break;
                 case R.id.blueSeekbar:
-                    bVal.setText("" + progress);
+                    switch(i) {
+                        case R.id.hair:
+                            faceModel.hairColorB = progress;
+                            break;
+                        case R.id.eyes:
+                            faceModel.eyeColorB = progress;
+                            break;
+                        case R.id.skin:
+                            faceModel.skinColorB = progress;
+                    }
                     break;
                 case R.id.greenseekBar:
-                    gVal.setText("" + progress);
+                    switch(i) {
+                        case R.id.hair:
+                            faceModel.hairColorG = progress;
+                            break;
+                        case R.id.eyes:
+                            faceModel.eyeColorG = progress;
+                            break;
+                        case R.id.skin:
+                            faceModel.skinColorG = progress;
+                    }
+                    break;
             }
+            updateViews(i);
         }
     }
 
@@ -55,38 +97,57 @@ public class RGBListeners implements SeekBar.OnSeekBarChangeListener, RadioGroup
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        int adj = 1;
+        updateViews(i);
+    }
 
+    protected void updateViews(int i) {
+        //Log.d("UPDATEVIEWS", "updateViews is called");
+        switch (i) {
+            case R.id.hair: //hair
+                rVal.setText("" +faceModel.hairColorR);
+                rSeekbar.setProgress(faceModel.hairColorR);
+                bVal.setText("" +faceModel.hairColorB);
+                bSeekbar.setProgress(faceModel.hairColorB);
+                gVal.setText("" +faceModel.hairColorG);
+                gSeekbar.setProgress(faceModel.hairColorG);
+                break;
+            case R.id.eyes: //eyes
+                rVal.setText("" +faceModel.eyeColorR);
+                rSeekbar.setProgress(faceModel.eyeColorR);
+                bVal.setText("" +faceModel.eyeColorB);
+                bSeekbar.setProgress(faceModel.eyeColorB);
+                gVal.setText("" +faceModel.eyeColorG);
+                gSeekbar.setProgress(faceModel.eyeColorG);
+                break;
+            case R.id.skin: //skin
+                rVal.setText("" +faceModel.skinColorR);
+                rSeekbar.setProgress(faceModel.skinColorR);
+                bVal.setText("" +faceModel.skinColorB);
+                bSeekbar.setProgress(faceModel.skinColorB);
+                gVal.setText("" +faceModel.skinColorG);
+                gSeekbar.setProgress(faceModel.skinColorG);
+                break;
+        }
+        hairSpinner.setSelection(faceModel.hairStyle);
+        faceView.invalidate();
+    }
+    @Override
+    public void onClick(View view) {
+        faceView.randomize();
+
+        updateViews(radioGroup.getCheckedRadioButtonId());
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        faceModel.hairStyle = i;
+        faceView.invalidate();
+        updateViews(radioGroup.getCheckedRadioButtonId());
     }
 
     @Override
-    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-        updateTexts(textView, 0);
-        return true;
-    }
-
-    /**
-     * helper method
-     *
-     *
-     * @param src
-     * @param adj - what amount to adjust value by
-     */
-    private void updateTexts(TextView src, int adj) { //all taken from Nux ;)
-        CharSequence cs = src.getText();
-        String strCurrVal = cs.toString();
-        int currVal = Integer.parseInt(strCurrVal);
-        int newVal = currVal + adj;
-        switch(src.getId()) {
-            case R.id.rNum:
-                rVal.setText("" +newVal);
-                break;
-            case R.id.bNum:
-                bVal.setText("" +newVal);
-                break;
-            case R.id.gNum:
-                gVal.setText("" +newVal);
-                break;
-        }
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        //not needed, default set
     }
 }
